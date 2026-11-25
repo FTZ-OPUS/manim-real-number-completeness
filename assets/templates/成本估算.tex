@@ -1,0 +1,210 @@
+% !TEX program = xelatex
+\documentclass[12pt,a4paper]{ctexart}
+
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=ptblue!80!black,urlcolor=ptteal}
+
+\definecolor{ptred}{HTML}{D64545}
+\definecolor{ptgold}{HTML}{D4A017}
+\definecolor{ptgreen}{HTML}{2E8B57}
+\definecolor{ptblue}{HTML}{3A7CA5}
+\definecolor{ptpurple}{HTML}{7B3F8C}
+\definecolor{ptteal}{HTML}{008080}
+\definecolor{ptorange}{HTML}{E07020}
+\definecolor{ptbg}{HTML}{F8F5F0}
+
+\newtcolorbox{infobox}[1]{
+    enhanced, breakable,
+    colback=ptbg, colframe=ptblue!70!black,
+    title={\color{white}\bfseries #1},
+    attach boxed title to top left={xshift=3mm,yshift=-3mm},
+    boxed title style={colback=ptblue,sharp corners,size=small},
+    before skip=14pt, after skip=10pt
+}
+\newtcolorbox{warnbox}[1]{
+    enhanced, breakable,
+    colback=ptred!4, colframe=ptred!70!black,
+    title={\color{white}\bfseries #1},
+    attach boxed title to top left={xshift=3mm,yshift=-3mm},
+    boxed title style={colback=ptred,sharp corners,size=small},
+    before skip=14pt, after skip=10pt
+}
+\newtcolorbox{okbox}[1]{
+    enhanced, breakable,
+    colback=ptgreen!5, colframe=ptgreen!60!black,
+    title={\color{white}\bfseries #1},
+    attach boxed title to top center={xshift=0mm,yshift=-3mm},
+    boxed title style={colback=ptgreen,sharp corners,size=small},
+    fonttitle=\large\centering,
+    before skip=14pt, after skip=10pt
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{ptblue}\small 楷体大字讲义电影 Skill}
+\fancyhead[R]{\color{ptblue}\small 成本估算 · \thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{ptblue}\leaders\hrule height 0.5pt\hfill}}
+
+\setlist{nosep}
+\renewcommand{\arraystretch}{1.35}
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering\vspace*{2.6cm}
+    {\Huge\bfseries\color{ptblue} 成本估算报告}\\[0.5cm]
+    {\Large\color{ptteal} 用 AI 生成楷体大字讲义电影 · Token 消耗与费用}\\[0.35cm]
+    {\color{gray} 基准模型：GLM-5.3-Flash（本样板间实际制作者）}\\[1.0cm]
+
+    \begin{tikzpicture}[scale=1.0]
+        \draw[ptteal, line width=1.5pt] (90:2.3) -- (30:2.3) -- (330:2.3) -- (270:2.3) -- (210:2.3) -- (150:2.3) -- cycle;
+        \foreach \a/\c/\t in {90/ptblue/{写码}, 30/ptgreen/{渲染}, 330/ptgold/{配音},
+                              270/ptorange/{复检}, 210/ptred/{返工}, 150/ptpurple/{交付}} {
+            \node[circle, draw=\c, line width=1.6pt, fill=\c!14, minimum size=1.2cm] at (\a:2.3) {\small\bfseries \t};
+        }
+        \node[circle, draw=ptgold, line width=2pt, fill=ptgold!22, minimum size=1.9cm] (core) at (0,0) {\Large\textbf{Token}};
+        \node[below=3.5cm of core, color=gray] {\small 一支成片的 AI 工作闭环};
+    \end{tikzpicture}
+
+    \vfill
+    {\large v1.0}\quad {\large 2026 年 10 月 31 日}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{估算对象与方法}
+
+\begin{infobox}{基准}
+本报告以样板间《实数完备性全景大电影》（144 秒 · 11 幕 · 26 段配音）的\textbf{真实制作过程}为测量基准。
+制作者为 \textbf{GLM-5.3-Flash}（智谱旗舰 Flash 档），从零风格摸索、写码、渲染调试、配音、复检，
+直至把整条流水线提炼为 Skill。这一流派的公开演示最早由谷歌 Gemini 做出——任何具备长上下文与
+代码能力的旗舰模型都能执行同一流程，本报告第 \ref{sec:price} 节同时给出国际旗舰单价的折算档。
+\end{infobox}
+
+方法：把制作过程拆成六类工作（读规范、写码、烟测抽帧、返工、配音与时间轴、文档交付），
+逐类清点输入/输出/图像 token，再按"用 Skill 复制一支新片"的客户场景折算。所有数字为
+\textbf{实测量级的整数化估计}，给 $\pm 50\%$ 的浮动带——返工率与上下文管理方式是最大变量。
+
+\begin{warnbox}{先说结论的位置}
+Token 量的数字集中在第 2、3 节；费用折算在第 \ref{sec:price} 节（单价为演示假设，请以实际账单替换）。
+\textbf{渲染本身不消耗 token}（本地机器跑 Manim），配音 TTS 免费——AI 费用基本就等于 token 费用。
+\end{warnbox}
+
+\section{Token 消耗结构（一支 2--3 分钟新片）}
+
+用 Skill 制作一支全新的 2--3 分钟片（5--8 幕），总消耗约 \textbf{80 万 -- 150 万 tokens}（中位约 100 万）。
+结构如下：
+
+\begin{center}
+\begin{tabular}{p{5.6cm} c p{2.2cm} p{4.6cm}}
+\hline
+\rowcolor{ptbg} 工作类别 & 占比 & 类型 & 说明 \\
+\hline
+读规范 + 样板间借鉴 & $\sim$15\% & 输入 & SKILL.md + style-guide + 例码，一次性 \\
+逐幕写码 + 思考 & $\sim$35\% & 输出为主 & 每幕 60--100 行 Manim 代码 \\
+烟测/探针图像输入 & $\sim$20\% & 输入(图像) & 每帧 $\approx$ 1--1.5K token，480p 烟测更省 \\
+修错迭代 & $\sim$20\% & 混合 & 越守规范越少（这就是 Skill 的价值） \\
+时间轴 + 配音稿 + 配置 + 文档 & $\sim$10\% & 输出为主 & 段落表、交接文档 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{okbox}{Skill 直接省掉的 token}
+样板间的 300 万 tokens 里有大量"从零摸索"成本：版式试错、API 用法试错、返工重写。
+用 Skill 后这部分被规范与模板直接消灭——\textbf{同类新片比无 Skill 从零做，省约 40--60\% tokens}。
+\end{okbox}
+
+\section{按片长外推}
+
+\begin{center}
+\begin{tabular}{p{4.2cm} c c p{5.2cm}}
+\hline
+\rowcolor{ptbg} 片长 & 幕数 & Token 总量（估计） & 制作方式 \\
+\hline
+2--3 分钟 & 5--8 & 0.8M -- 1.5M & 单项目一次做完 \\
+10 分钟 & 10--14 & 1.5M -- 3M & 单项目，分两批渲染 \\
+30 分钟 & 20--30 & 3M -- 8M & 分 3--4 章，章节化流水线 \\
+\textbf{1 小时} & 45--60 & \textbf{6M -- 15M} & 分 6--10 章 + 交接文档断点续作 \\
+\hline
+\end{tabular}
+\end{center}
+
+一小时片的浮动带最宽：能否守住"改哪幕渲哪幕、改哪段重配哪段"的增量纪律，
+上下文是否用交接文档隔离（避免整项目反复重读），可带来 2 倍以上的差距。
+
+\section{费用折算}\label{sec:price}
+
+\begin{warnbox}{关于表中单价}
+下表三档单价均为\textbf{演示用假设}（国内 Flash 档 $\approx$ 输入 ¥1 / 输出 ¥8 每百万；
+国内旗舰档 $\approx$ ¥4 / ¥16；国际旗舰档 $\approx$ \$0.6 / \$6 每百万，且需注意国际模型的
+图像输入与长上下文计价规则）。\textbf{请以你所用平台当期账单价替换重算}——Token 量（上一节）才是本表的硬结论。
+\end{warnbox}
+
+\begin{center}
+\begin{tabular}{p{3.4cm} c c c}
+\hline
+\rowcolor{ptbg} 场景 & 国内 Flash 档 & 国内旗舰档 & 国际旗舰档（Gemini 等） \\
+\hline
+2--3 分钟片 & $\approx$ ¥3 & $\approx$ ¥8 & $\approx$ \$2--4 \\
+10 分钟片 & $\approx$ ¥6--12 & $\approx$ ¥15--30 & $\approx$ \$4--8 \\
+\textbf{1 小时课程片} & $\approx$ ¥25--60 & $\approx$ ¥70--160 & $\approx$ \$25--60 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{infobox}{与"谷歌 Gemini 原始演示"的关系}
+这一流派的公开示范（对话式生成 3Blue1Brown 风格讲解片）最早由谷歌 Gemini 完成。
+用国际旗舰模型执行本 Skill，Token 消耗量级与上表相同，差异主要在单价与图像输入计价——
+即第三列。结论不变：\textbf{换模型改变的是价格档位，不是可行性}。
+\end{infobox}
+
+\section{Token 之外的成本（别只盯 token）}
+
+\begin{center}
+\begin{tabular}{p{3.6cm} p{4.4cm} p{5.6cm}}
+\hline
+\rowcolor{ptbg} 成本项 & 量级 & 说明 \\
+\hline
+渲染机器时间 & 样板间 $\sim$25 分钟；1 小时片 8--14 小时 & 本地 CPU/内存消耗，电费不足 2 度；可分章挂机 \\
+TTS 配音 & ¥0 & edge-tts 免费；客户自备录音亦 ¥0 \\
+人工监工/验收 & 每幕约 1--2 分钟 & 抽帧过目 + 终检；这是质量的主要保障 \\
+\hline
+\end{tabular}
+\end{center}
+
+即：\textbf{一支一小时课程片的 AI 直接成本在几十元人民币量级（国内 Flash 档），渲染电费可忽略，
+真正的投入是机器挂机时间与人工验收}。对比外包或自制动画，成本差 2--3 个数量级。
+
+\section{省 Token 的七个习惯}
+
+\begin{enumerate}
+    \item \textbf{先读后写}：动笔前读完 SKILL.md + 版式规范，一次写对，返工是最大的 token 黑洞；
+    \item \textbf{基类照抄}：BaseKaitiScene 整段复制，禁止重新发明组件；
+    \item \textbf{低清烟测}：\code{-ql} 480p 小图抽帧，图像 token 比 1080p 少一个量级；
+    \item \textbf{单帧抽查}：探针只抽"边界 + 0.4s"单帧，绝不整片逐帧扫；
+    \item \textbf{哈希缓存}：配音改一段重配一段，别整批重跑；
+    \item \textbf{交接文档}：长片用 \code{00-总纲.md} + \code{交接文档.md} 隔离上下文，新会话只读摘要；
+    \item \textbf{增量渲染}：\code{--only} 指哪渲哪——省的是机器时间，同时避免"渲染日志刷屏"涌入上下文。
+\end{enumerate}
+
+\vspace{0.4cm}
+\begin{okbox}{一页结论}
+用本 Skill 生成一支 2--3 分钟新片：约 100 万 tokens，国内 Flash 档约 \textbf{几元人民币}；
+一小时课程片：约 600 万 -- 1500 万 tokens，国内 Flash 档约 \textbf{几十元}、国际旗舰约几十美元。
+渲染不花 token、TTS 免费；最大开销是渲染机器时间与人工验收——而这两项恰恰决定质量。
+\end{okbox}
+
+\end{document}

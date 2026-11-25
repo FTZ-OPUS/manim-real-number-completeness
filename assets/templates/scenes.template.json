@@ -1,0 +1,10 @@
+{
+  "project_dir": null,
+  "output_dir": "out/episodes",
+  "master_name": "母带_1080P60.mp4",
+  "scenes": [
+    {"script": "ch01/ch01_scenes.py", "scene": "Ch01_ColdOpen3D", "output": "000_片头3D.mp4"},
+    {"script": "ch01/ch01_scenes.py", "scene": "Ch01_01_导入", "output": "010_第一章_导入.mp4"},
+    {"script": "ch02/ch02_scenes.py", "scene": "Ch02_01_定义", "output": "020_第二章_定义.mp4"}
+  ]
+}

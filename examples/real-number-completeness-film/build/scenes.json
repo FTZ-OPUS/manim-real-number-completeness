@@ -1,0 +1,18 @@
+{
+  "project_dir": null,
+  "output_dir": "out/episodes",
+  "master_name": "实数完备性全景大电影_楷体大字母带_1080P60.mp4",
+  "scenes": [
+    {"script": "real_number_cold_open_3d.py", "scene": "Scene00_ColdOpen3D", "output": "000_片头_六柱环核3D.mp4"},
+    {"script": "real_number_history_expanded.py", "scene": "Scene00_HistoryExpanded", "output": "001_历史篇_四大立法者.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene01_DedekindCut", "output": "010_实数创立_戴德金分割.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene02_SupremumPrinciple", "output": "020_定理一_确界原理.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene03_MonotoneConvergence", "output": "030_定理二_单调有界.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene04_NestedIntervals", "output": "040_定理三_一维区间套.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene04_NestedIntervals3D", "output": "045_定理三拓展_三维嵌套立方体.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene05_BolzanoWeierstrass", "output": "050_定理四_致密性.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene06_HeineBorel", "output": "060_定理五_有限覆盖.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene07_CauchyCriterion", "output": "070_定理六_柯西准则.mp4"},
+    {"script": "real_number_kaiti_master.py", "scene": "Scene08_GrandEquivalence3D", "output": "090_终章_3D等价闭环.mp4"}
+  ]
+}

@@ -1,0 +1,319 @@
+% !TEX program = xelatex
+\documentclass[12pt,a4paper]{ctexart}
+
+% === 宏包 ===
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows.meta,positioning}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=ptblue!80!black,urlcolor=ptteal}
+
+% === 颜色主题 ===
+\definecolor{ptred}{HTML}{D64545}
+\definecolor{ptgold}{HTML}{D4A017}
+\definecolor{ptgreen}{HTML}{2E8B57}
+\definecolor{ptblue}{HTML}{3A7CA5}
+\definecolor{ptpurple}{HTML}{7B3F8C}
+\definecolor{ptteal}{HTML}{008080}
+\definecolor{ptorange}{HTML}{E07020}
+\definecolor{ptbg}{HTML}{F8F5F0}
+
+% === 彩色信息框 ===
+\newtcolorbox{infobox}[1]{
+    enhanced, breakable,
+    colback=ptbg, colframe=ptblue!70!black,
+    title={\color{white}\bfseries #1},
+    attach boxed title to top left={xshift=3mm,yshift=-3mm},
+    boxed title style={colback=ptblue,sharp corners,size=small},
+    before skip=14pt, after skip=10pt
+}
+\newtcolorbox{warnbox}[1]{
+    enhanced, breakable,
+    colback=ptred!4, colframe=ptred!70!black,
+    title={\color{white}\bfseries #1},
+    attach boxed title to top left={xshift=3mm,yshift=-3mm},
+    boxed title style={colback=ptred,sharp corners,size=small},
+    before skip=14pt, after skip=10pt
+}
+\newtcolorbox{okbox}[1]{
+    enhanced, breakable,
+    colback=ptgreen!5, colframe=ptgreen!60!black,
+    title={\color{white}\bfseries #1},
+    attach boxed title to top center={xshift=0mm,yshift=-3mm},
+    boxed title style={colback=ptgreen,sharp corners,size=small},
+    fonttitle=\large\centering,
+    before skip=14pt, after skip=10pt
+}
+
+% === 页眉页脚 ===
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{ptblue}\small 楷体大字讲义电影 Skill}
+\fancyhead[R]{\color{ptblue}\small 使用说明 · \thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{ptblue}\leaders\hrule height 0.5pt\hfill}}
+
+\setlist{nosep}
+\renewcommand{\arraystretch}{1.35}
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+\begin{document}
+
+% ================= 封面 =================
+\begin{titlepage}
+    \centering\vspace*{2.2cm}
+    {\Huge\bfseries\color{ptblue} 楷体大字讲义电影 Skill}\\[0.55cm]
+    {\Large\color{ptteal} Kaiti Lecture Film Skill · 使用说明}\\[0.35cm]
+    {\color{gray} 用 Manim 把讲义变成音画同步的 3Blue1Brown 风格讲解电影}\\[1.1cm]
+
+    \begin{tikzpicture}[scale=1.05]
+        \coordinate (c) at (0,0);
+        \draw[ptteal, line width=1.6pt] (90:2.5) -- (30:2.5) -- (330:2.5) -- (270:2.5) -- (210:2.5) -- (150:2.5) -- cycle;
+        \foreach \a/\c/\t in {90/ptblue/{确界}, 30/ptgreen/{单调}, 330/ptgold/{区间套},
+                              270/ptorange/{致密}, 210/ptred/{覆盖}, 150/ptpurple/{柯西}} {
+            \node[circle, draw=\c, line width=1.6pt, fill=\c!14, minimum size=1.25cm] at (\a:2.5) {\small\bfseries \t};
+        }
+        \node[circle, draw=ptgold, line width=2.2pt, fill=ptgold!22, minimum size=2.0cm] at (c) {\Large$\mathbb{R}$};
+        \node[below=3.7cm of c, color=gray] {\small 六大定理支柱环绕实数核 —— 样板间片头画面};
+    \end{tikzpicture}
+
+    \vfill
+    {\large 版本 v1.0}\quad {\large 2026 年 10 月 31 日}\\[0.3cm]
+    {\small\color{gray} 渲染 · 配音 · 复检 · 长视频流水线 全家桶}
+\end{titlepage}
+
+% ================= 目录 =================
+\tableofcontents
+\newpage
+
+% ================= 1 =================
+\section{这套 Skill 是什么}
+
+它是一条\textbf{完整的视频生产流水线}：把一份讲义、一组定理或一个课程章节，变成一支
+\textbf{楷体大字 · 深色高奢 · 配音逐句对齐画面}的讲解电影。你交给 AI 的只是一份大纲或讲义文本，
+它按本 Skill 的规范写出动画源码、渲染、配音、复检，最后给你一支可直接发布的 MP4。
+
+\begin{infobox}{样板间（已交付并验收的成品）}
+\code{examples/real-number-completeness-film/} 内含一支 \textbf{144 秒 · 1080P60 · 26 段配音}的
+《实数完备性全景大电影》：3D 片头神殿（六根彩色定理圆柱环绕金色实数核）→ 扩充历史篇
+（四大立法者肖像与个人特写）→ 六大完备性定理逐一可视化证明 → 3D 等价闭环终章。
+直接双击 \code{out/实数完备性大电影\_配音版\_1080P60.mp4} 观看；这也是你未来成片的"标准答案"。
+\end{infobox}
+
+\begin{okbox}{关于一小时长视频：完全可以}
+本流水线每一环都按``幕''解耦，幕数增加只线性增加工作量：一小时 $\approx$ 45--60 幕，
+渲染约 8--14 小时机器时间（分章挂机，一晚一章），配音用免费 TTS 或自备录音，混流数分钟。
+详细做法与产能估算见第 \ref{sec:long} 节。
+\end{okbox}
+
+% ================= 2 =================
+\section{目录结构：标准 Skill 骨架五部分}
+
+\begin{center}
+\begin{tabular}{>{\bfseries}p{2.6cm} p{4.6cm} p{7.2cm}}
+\hline
+\rowcolor{ptbg} 部分 & 位置 & 作用 \\
+\hline
+门面 + 大脑 & \code{SKILL.md} & 决定 AI 何时用它、怎么做；铁律速查 \\
+知识库 & \code{references/} & 版式规范 / 配音方法论 / 长视频指南 / 联网搜图 / 避坑清单 \\
+手 & \code{scripts/} & \code{build\_film.py} 渲染缝合 · \code{dub\_pipeline.py} 配音合成 · \code{verify\_film.py} 复检 \\
+样板间 & \code{examples/} & 完整可运行项目：源码 + 素材 + 配音稿 + 成片 \\
+仓库 & \code{assets/} & 字体说明 · scenes.json 模板 · 本说明书源文件 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{infobox}{把 Skill 喂给你的 AI}
+把整个文件夹交给你的 Agent（如放入其技能目录），Agent 读取 \code{SKILL.md} 后即具备完整工作能力；
+制作过程中它会按需翻阅 \code{references/} 下对应主题的知识文件。你只需要下达类似
+``用这个 skill 把我的第二章讲义做成一支 10 分钟视频''的指令。
+\end{infobox}
+
+% ================= 3 =================
+\section{环境准备（跨平台）}
+
+\begin{center}
+\begin{tabular}{p{3.4cm} p{4.6cm} p{6.4cm}}
+\hline
+\rowcolor{ptbg} 依赖 & 用途 & 安装 \\
+\hline
+Python $\geq$ 3.10 & 运行 Manim 与脚本 & 官网或包管理器 \\
+Manim CE $\geq$ 0.18 & 渲染动画 & \code{pip install manim} \\
+FFmpeg / FFprobe & 缝合、混流、复检 & macOS \code{brew install ffmpeg}；Win \code{winget install ffmpeg}；Linux \code{apt install ffmpeg} \\
+LaTeX + dvisvgm & 公式渲染 & MacTeX / MiKTeX / TeX Live \\
+edge-tts（可选） & 免费中文 TTS & \code{pip install edge-tts}（自备录音则免） \\
+楷体系字体 & 全片气质 & 见 \code{assets/fonts/} 内《字体说明》；Linux 推荐开源霞鹜文楷 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{warnbox}{两个最常见的环境坑}
+一、\code{manim} 装在虚拟环境里时，请用该环境的 \code{python} 运行脚本（脚本会自动探测同目录的 \code{manim}）；
+二、\code{MathTex} 公式依赖本机 LaTeX，新机器先跑 \code{latex --version} 确认。
+\end{warnbox}
+
+% ================= 4 =================
+\section{快速上手：三步复现样板间}
+
+在 \code{examples/real-number-completeness-film/} 目录下依次执行：
+
+\begin{enumerate}
+    \item \textbf{渲染 + 缝合}（约 20--40 分钟机器时间）\\
+    \code{python ../../scripts/build\_film.py build/scenes.json}\\
+    烟测单幕（秒级）：加 \code{--quality ql --only Scene00\_ColdOpen3D}
+    \item \textbf{配音合成}（联网 TTS，约 3 分钟）\\
+    \code{python ../../scripts/dub\_pipeline.py work/dub\_config.json}
+    \item \textbf{复检验收}\\
+    \code{python ../../scripts/verify\_film.py --master <母带>.mp4 -{}-dubbed <成片>.mp4 --probes 5.5,60,143}\\
+    （\code{<母带>} 即 \code{out/episodes/} 下的缝合产物，\code{<成片>} 即 \code{out/} 下的配音成片）
+\end{enumerate}
+
+全绿（\textbf{ALL PASS}）即环境就绪、流水线可用。样例项目的 \code{work/audio/} 已内置全部 26 段
+音频缓存与 \code{manifest.json}，改稿重配只花改动量所需的时间。
+
+% ================= 5 =================
+\section{制作自己的视频：标准八步工作流}
+
+\begin{enumerate}
+    \item \textbf{立项}：新建项目文件夹，从样板间拷贝目录结构（\code{assets/}、\code{build/}、\code{work/}、\code{out/}）。
+    \item \textbf{分幕脚本}：把讲义拆成 40--80 秒的幕；每幕一个场景类，按 \code{references/style-guide.md}
+    的版式规范写（基类整段复制、\code{MathTex} 禁汉字、零重叠、\code{fit} 防截断）。
+    \item \textbf{单幕烟测}：\code{manim -ql 文件.py 场景类}，抽帧确认排版再进正式渲染。
+    \item \textbf{渲染缝合}：写 \code{build/scenes.json}（模板见 \code{assets/templates/}），跑 \code{build\_film.py}。
+    \item \textbf{重建时间轴}：从源码逐段累加时长，硬自检"累加值 = ffprobe 实测"（误差 $\leq$ 0.5s）。
+    \item \textbf{段落表 + 文案}：写 \code{work/dub\_config.json}；每段字数 $\approx$ (段长$-0.7$s)$\times$4.6 字，风趣但严格对应画面。
+    \item \textbf{配音合成 + 复检}：跑 \code{dub\_pipeline.py} 后立即跑 \code{verify\_film.py}，探针帧逐帧确认音画对位。
+    \item \textbf{交付}：\code{out/} 下的成片 + \code{段落表.txt} + 配音稿文档。
+\end{enumerate}
+
+\begin{infobox}{改稿只重配一段}
+配音按\textbf{文案哈希}缓存（\code{work/audio/tts\_<哈希>.mp3}）。修改某段文案重跑管线时，
+其余 25 段全部命中缓存秒过，只有改动段重新合成——迭代成本极低。
+\end{infobox}
+
+% ================= 6 =================
+\section{制作一小时长视频}\label{sec:long}
+
+\begin{center}
+\begin{tabular}{p{3.2cm} p{3.6cm} p{7.2cm}}
+\hline
+\rowcolor{ptbg} 项目 & 样板间 144 秒 & 一小时片（约 25 倍） \\
+\hline
+幕数 & 11 幕 & 45--60 幕（每幕 40--80s） \\
+渲染机器时间 & $\sim$25 分钟 & \textbf{8--14 小时}（分章无人值守，一晚一章） \\
+配音 & 免费，数分钟 & 免费，约 30 分钟（TTS）；或自备录音 \\
+混流缝合 & $<$1 分钟 & 数分钟（无损 \code{-c copy}） \\
+源码规模 & 3 文件 & 12--18 个章文件 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{做法要点}（细则见 \code{references/long-film-playbook.md}）：
+\begin{itemize}
+    \item \textbf{章节化}：一章一文件夹一源码文件，全片幕序收拢在 \code{build/master\_scenes.json}；
+    \item \textbf{增量渲染}：改哪幕渲哪幕（\code{--only 场景名}），绝不整片重渲；
+    \item \textbf{分章配音}：每章独立段落表与配音成片，最后无损缝合全片——问题不跨章传播；
+    \item \textbf{一致性}：基类/颜色/字号逐字复用样板间；建术语表保证 50 幕符号写法唯一；
+    \item \textbf{断点续作}：维护 \code{00-总纲.md} 与 \code{交接文档.md}，任何 Agent 接手即可续作。
+\end{itemize}
+
+% ================= 7 =================
+\section{配音详解}
+
+\subsection{音画同步的原理}
+画面时间轴由\textbf{源码}决定（每个 \code{play}/\code{wait} 的时长累加），配音时间轴由段落表决定。
+先从源码重建"哪一秒画面在演什么"，再让每句解说在对应窗口内播出——这是逐句同步的根基。
+\textbf{绝不靠肉眼抽帧猜段落}；抽帧只用于边界抽查（探针帧）。
+
+\subsection{TTS 参数}
+音色 \code{zh-CN-XiaoyiNeural}（晓伊）；语速 +4\% 起步自动递进（上限 +24\%）；
+实测语速约 4.6 字/秒；每段留 0.7s 呼吸；超长段管线会提示"建议删 N 字"——\textbf{先改文案}。
+
+\subsection{自备录音替换法（客户自己配音）}
+\begin{enumerate}
+    \item 跑一次管线，打开 \code{work/audio/manifest.json}：段名 $\to$ \code{tts\_<哈希>.mp3} 对照表；
+    \item 把自己的录音\textbf{改名为对应哈希文件名}放回 \code{work/audio/}（时长建议 $\approx$ 段长 $-$ 0.7s）；
+    \item 重跑管线：该段自动采用你的录音，其余段不受影响，排程自动重算。
+\end{enumerate}
+
+% ================= 8 =================
+\section{联网搜图（肖像 / 插图）}
+
+历史人物肖像、插图素材由 Agent 联网搜集，规范见 \code{references/web-image-sourcing.md}：
+\begin{itemize}
+    \item \textbf{只收公共领域（PD）或 CC0}：19 世纪人物翻拍肖像在 Wikimedia Commons 绝大多数为 PD；
+    \item 优先 Commons 文件页取原图直链（\code{Special:FilePath/XXX.jpg?width=1200} 可直接拿缩放版）；
+    \item 每图登记 \code{assets/portraits/SOURCES.md}（文件名 | 来源 URL | 许可 | 作者/年代）；
+    \item 分辨率 $\geq$ 800px、无水印；照片版与版画（engraved）版可并存增加变化；
+    \item \textbf{红线}：禁用带水印图与 AI 生成人物冒充历史照片。
+\end{itemize}
+
+% ================= 9 =================
+\section{复检验收标准}
+
+\code{verify\_film.py} 自动执行下表，任何一项不过即退出码 1：
+
+\begin{center}
+\begin{tabular}{p{5.2cm} p{8.6cm}}
+\hline
+\rowcolor{ptbg} 指标 & 标准 \\
+\hline
+母带 / 成片时长有效 & 文件可读、含视频流 / 音频流 \\
+$\Sigma$分幕 = 母带 & 误差 $\leq$ 0.5s \\
+成片 = 母带 & 误差 $\leq$ 0.5s \\
+响度抽点 & 说话区 $-20\sim-30$dB；$<-55$dB 判死气段，回炉加文案 \\
+探针帧 & 按时间戳导出 PNG，人工/视觉裁判确认音画对位 \\
+\hline
+\end{tabular}
+\end{center}
+
+% ================= 10 =================
+\section{常见问题 FAQ}
+
+\begin{description}[style=nextline]
+    \item[公式里能写中文吗？] 不能。\code{MathTex} 遇汉字必崩；中文用 \code{Text}，混排用 \code{VGroup} 拼接。
+    \item[圆柱/球体颜色不生效？] Surface 系必须传 \code{checkerboard\_colors=[亮,暗]}；纯色层用 \code{checkerboard\_colors=False}。
+    \item[配音和画面差了半秒？] 先查时间轴累加：\code{clear\_scene} 的 0.6s、无 \code{run\_time} 的 play 按 1.0s、\code{Flash} 默认 1.0s。
+    \item[TTS 一直超长？] 按管线提示删字，不要硬提语速；不同机器语速略有差异，先跑 3 段小样校准。
+    \item[换电脑字体变了？] 用 \code{assets/fonts/字体说明.md} 的检测片段自动回退，或统一安装霞鹜文楷。
+    \item[改了一幕怎么只重渲这一幕？] \code{build\_film.py --only 场景名}；配音同理走哈希缓存。
+    \item[能出竖屏/4K 吗？] 改 \code{config.pixel\_width/height} 与画布常量即可，规范模板同源；本 Skill 默认 16:9 1080P60。
+    \item[渲染报错先看哪？] \code{references/troubleshooting.md}——所有条目都是真实踩过的坑。
+\end{description}
+
+% ================= 11 =================
+\section{版式规范速查}
+
+\begin{center}
+\begin{tabular}{>{\bfseries}p{2.2cm} p{2.6cm} p{3.0cm} >{\bfseries}p{2.2cm} p{2.6cm}}
+\hline
+\rowcolor{ptbg} 常量 & 色 & 用途 & 常量 & 色 \\
+\hline
+BG & \#0F1720 & 深蓝黑背景 & ORANGE & \#F59E62 \\
+INK & \#F6F2EA & 正文暖白 & RED & \#FF6B6B \\
+MUTED & \#A9B4C2 & 辅助灰 & VIOLET & \#B79CFF \\
+BLUE & \#5DADEC & 标题/步骤 & GOLD & \#F0A500 \\
+GREEN & \#66D19E & 结论/极限 & YELLOW & \#FFD166 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{时长预算}：标题 Write 0.8--0.9s；单行推导 0.7s（$\leq$3 行/幕）；图形 0.9--1.2s；
+收尾 hold 2.2--3.2s；一幕 30--90s。\textbf{安全区}：一切行 \code{fit(width=13.6)}；
+数轴下移 1.9--2.0 单位；推导区只住上半屏。
+
+\vspace{0.6cm}
+\begin{okbox}{交付清单（每次成片标配）}
+成片 MP4（1080P60 带配音）· 无声母带 · 分幕文件 · \code{段落表.txt} · 配音稿文档 · verify 全绿报告
+\end{okbox}
+
+\end{document}
